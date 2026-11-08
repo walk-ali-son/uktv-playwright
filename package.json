@@ -1,0 +1,19 @@
+{
+  "name": "uktv-playwright",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Independent Playwright framework for the UKTV project.",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "dotenv": "^18.0.9"
+  }
+}
