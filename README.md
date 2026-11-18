@@ -12,7 +12,7 @@ AI was used to push the code to Git and in the initial framework set up (althoug
 
 ## Run tests
 
-You need Node.js and npm. Clone this repository, then run these commands from the project folder:
+Clone this repository, then run these commands from the project folder:
 
 ```bash
 npm install
@@ -21,8 +21,6 @@ npm test
 ```
 
 `npm run test:headed` opens the browser while the tests run.
-
-The tests open the live site, so the machine needs an internet connection. Run them from the UK. U can look different outside the UK.
 
 Two tests in `task1-5.spec.ts` fail on a normal run:
 
