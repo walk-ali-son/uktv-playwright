@@ -8,7 +8,7 @@ Playwright Codegen was used to help find selectors.
 
 Each task started in its own file so failures were quicker and easier to find. They are also combined in `complete-test-desktop.spec.ts` as one desktop e2e test.
 
-AI was used to push the code to Git and in the initial framework set up (although I gave a lot of instructions and made changes for best practices in this, although not all of them were used for this due to time, such as POM were not set up).
+AI was used to push the code to Git and in the initial framework set up (although I gave a lot of instructions and made changes for best practices in this, although not all of them were used for this due to time, such as POM files were not set up).
 
 ## Run tests
 
