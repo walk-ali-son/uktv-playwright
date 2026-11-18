@@ -1,45 +1,77 @@
 # UKTV Playwright
 
-Playwright tests for [U](https://u.co.uk). This folder is its own project: its own `package.json`, config, and `node_modules`.
+Playwright tests for [U](https://u.co.uk). Tests run in Chromium. They use the desktop viewport, except the second test in `task1-5.spec.ts`, which uses an iPhone 17 viewport.
 
-It does not use the Playwright learning work in `~/playwright-project`, or the Playwright files in the home directory.
+The base URL is set in `config/environments.ts`. 
 
-## Tests
+Playwright Codegen was used to help find selectors.
 
-| Test | File | Needs |
-| --- | --- | --- |
-| A new user can register | `tests/account/register.spec.ts` | `U_REGISTER_EMAIL` |
-| An existing user can sign in | `tests/account/login.spec.ts` | `U_EMAIL` and `U_PASSWORD` |
-| A signed-out user has to sign in to watch | `tests/playback/watch-signed-out.spec.ts` | nothing |
-| A signed-in user can start watching | `tests/playback/watch-signed-in.spec.ts` | `U_EMAIL` and `U_PASSWORD` |
+Each task started in its own file so failures were quicker and easier to find. They are also combined in `complete-test-desktop.spec.ts` as one desktop e2e test.
 
-Cookies, registration, sign-in, and playback are shared steps. Tests do not call each other.
-
-- The cookie banner is a component (`components/cookie-banner.ts`). The home page accepts it after opening a page.
-- Register, login, and the player live in `pages/`.
-- Email and password stay in `.env`. The episode path is on the player page. The registration name, date of birth, and postcode are on the register page.
-
-The register test creates a real U account. Use an inbox you control. The date of birth sent by the test is 15 March 1990.
+AI was used to push the code to Git and in the initial framework set up (although I gave a lot of instructions and made changes for best practices in this, although not all of them were used for this due to time, such as POM were not set up).
 
 ## Run tests
 
+Install the dependencies and the Chromium browser, then run the tests from this folder:
+
 ```bash
-cp .env.example .env
+npm install
+npm run install:browsers
 npm test
 ```
 
-Fill in `.env` before the register, login, and signed-in watch tests can run. The signed-out watch test runs without an account.
+`npm run test:headed` opens the browser while the tests run.
 
-```bash
-npm run test:headed
-npm run test:ui
-npm run report
-```
+## Test files
 
-Chromium is the browser these tests use. Run them from the UK. U can look different outside the UK, and GitHub-hosted runners are often outside the UK.
+### task1-1.spec.ts - Homepage smoke test
 
-`.env` is not committed.
+Accepts the cookie banner only when it is showing. Checks that the Top 10 list has 10 links, and that the first and last link to a show page.
 
-## CI
+### task1-2.spec.ts - Data-driven navigation
 
-`.github/workflows/playwright.yml` runs the suite on pushes and pull requests to `main`. Add repository secrets named `U_EMAIL`, `U_PASSWORD`, and `U_REGISTER_EMAIL` when those tests should run in GitHub Actions. Without the secrets, those three tests skip and the signed-out watch test still runs.
+The three show flows were written separately, then merged into one loop that opens the first three shows and then stops. `showLinks` and `positions` name the list and which items to open. The cookie banner is accepted here because it covers the third item and the click never finishes. `page.goBack()` returns to the list between shows.
+
+### task1-3.spec.ts - Search
+
+Searches for a known show, a string that matches nothing, and two unusual inputs.
+
+### task1-4.spec.ts - Sign-in redirect
+
+Checks the current featured banner, "Sign in to watch The Red King". To keep this working when the banner changes, the test would need to read the show name from the link and match that slug in the URL.
+
+### task1-5.spec.ts - Responsive and accessibility checks
+
+The first test presses Tab and Enter, then runs axe. It does not yet check that the Skip to content link moved focus to the main content.
+
+The second test runs the homepage smoke test at an iPhone 17 viewport. It fails because the mobile layout uses different controls. It shows that the test can run on a mobile device.
+
+### complete-test-desktop.spec.ts
+
+All of the desktop tasks in one end-to-end test.
+
+## Axe findings on the homepage
+
+These are all in the featured carousel:
+
+- **Critical.** The pagination is marked as a tablist, but its children are `li` elements. A tablist must contain tabs.
+- **Critical.** The dot buttons have `role="tab"`, but they sit inside those `li` elements rather than directly in the tablist.
+- **Serious.** Those same `li` elements are no longer valid list items, because their parent is a tablist instead of a list.
+- **Minor.** One carousel slide is an `li` given `role="tabpanel"`, which is not an allowed role for a list item.
+
+## Debugging flaky-test.spec.ts
+
+The commented test at the top of the file has these problems:
+
+1. Lines 8 and 9 count `.carousel-item` after the click, so the count runs on the show page instead of the homepage. It should run before the click.
+2. The Top 10 order changes. The test hardcodes which item to click and which show title to expect, so it fails when that show is no longer in that position.
+3. Replace `waitForTimeout` with an assertion that the Top 10 list is visible.
+4. Accept the cookie banner so it does not cover the page.
+5. Scrolling the Top 10 list into view makes debugging easier.
+
+### Investigating intermittent CI failures
+
+1. Check the error, screenshots, video, and trace for the failing test.
+2. Compare it with other failures. Is it always the same step? Run it again and see if it still fails about one time in five.
+3. Compare the browser and speed. CI runs headless Chromium. A headed run on this machine can be slower, so a race can pass locally and fail in the pipeline.
+4. Check region before time zone. GitHub-hosted runners are often outside the UK, and U can look different from abroad.
