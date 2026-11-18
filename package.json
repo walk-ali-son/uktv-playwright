@@ -9,11 +9,14 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
     "install:browsers": "playwright install"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.65.0",
     "@types/node": "^26.6.6",
-    "dotenv": "^18.0.9"
+    "dotenv": "^18.0.9",
+    "typescript": "^7.0.2"
   }
 }

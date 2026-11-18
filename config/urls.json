@@ -1,0 +1,6 @@
+{
+    "baseURL": "https://u.co.uk",
+    "paths": {
+      "home": "/"
+    }
+  }

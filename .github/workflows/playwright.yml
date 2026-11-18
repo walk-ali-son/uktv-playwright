@@ -20,7 +20,10 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
         env:
-          BASE_URL: ${{ vars.BASE_URL }}
+          BASE_URL: https://u.co.uk
+          U_EMAIL: ${{ secrets.U_EMAIL }}
+          U_PASSWORD: ${{ secrets.U_PASSWORD }}
+          U_REGISTER_EMAIL: ${{ secrets.U_REGISTER_EMAIL }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

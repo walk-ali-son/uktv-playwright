@@ -1,14 +1,15 @@
-// @ts-check
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 /**
- * Independent Playwright project for UKTV.
+ * Independent Playwright project for U (u.co.uk).
  * This folder has its own config, dependencies, and browsers.
  * It does not use the learning project in ~/playwright-project
  * or the Playwright files in the home directory.
+ *
+ * Each test starts in a fresh browser. The signed-in watch test signs in itself.
  *
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -20,7 +21,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? [['html'], ['list']] : 'html',
   use: {
-    baseURL: process.env.BASE_URL || undefined,
+    baseURL: process.env.BASE_URL || 'https://u.co.uk',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -30,13 +31,5 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
   ],
 });
