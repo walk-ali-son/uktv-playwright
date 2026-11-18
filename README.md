@@ -27,8 +27,6 @@ Two tests in `task1-5.spec.ts` fail on a normal run:
 - The accessibility check fails because axe finds issues on the homepage. The findings are listed below.
 - The iPhone 17 smoke test fails because the mobile layout does not use the same navigation controls as desktop.
 
-`task1-4.spec.ts` clicks the current featured banner, "Sign in to watch The Red King". It fails when that banner changes.
-
 ## Test files
 
 ### task1-1.spec.ts - Homepage smoke test
