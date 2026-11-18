@@ -11,6 +11,7 @@ test.describe('Task 1.4 - Sign-in redirect', () => {
 	//The information identifying the show you came from is preserved in the URL.
 
     await page.getByRole('link', { name: 'Sign in to watch The Red King' }).click();
+    await expect(page.getByRole('link', { name: 'Sign in to watch' })).toBeVisible();
     await expect(page).toHaveURL(/slug=the-red-king/);
     //would want to improve this by collecting the show name from the banner and asserting it is in the title, as this will fail once the banner changes
 

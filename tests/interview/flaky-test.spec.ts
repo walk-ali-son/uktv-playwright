@@ -22,7 +22,7 @@ test('top 10 shows', async ({ page }) => {
   await page.getByRole('list', { name: 'Top 10 This Week' }).scrollIntoViewIfNeeded();
   await expect(page.getByRole('list', { name: 'Top 10 This Week' }).getByRole('link')).toHaveCount(10);
 
-  await page.getByRole('link').nth(7).click();
-  await expect(page).toHaveURL(/slug/);
+  await page.getByRole('list', { name: 'Top 10 This Week' }).getByRole('link').nth(7).click();
+  await expect(page).toHaveURL(/\/shows\/[^/]+\/watch-online/);
 
 });
