@@ -31,11 +31,11 @@ Two tests in `task1-5.spec.ts` fail on a normal run:
 
 ### task1-1.spec.ts - Homepage smoke test
 
-Accepts the cookie banner only when it is showing. Checks that the Top 10 list has 10 links, and that the first and last link to a show page.
+Uses a if statement to accepts the cookie banner only when it is showing. Checks that the Top 10 list has 10 links, and that the first and last have links.
 
 ### task1-2.spec.ts - Data-driven navigation
 
-The three show flows were written separately, then merged into one loop that opens the first three shows and then stops. `showLinks` and `positions` name the list and which items to open. The cookie banner is accepted here because it covers the third item and the click never finishes. `page.goBack()` returns to the list between shows.
+The three flows were written separately, then merged into one loop that opens the first three shows and then stops. `showLinks` and `positions` name the list and which items to open. The cookie banner is accepted here because it covers the third item and the click never happens if it is not removed. `page.goBack()` returns to the list between shows.
 
 ### task1-3.spec.ts - Search
 
@@ -49,11 +49,11 @@ Checks the current featured banner, "Sign in to watch The Red King". To keep thi
 
 The first test presses Tab and Enter, then runs axe. It does not yet check that the Skip to content link moved focus to the main content.
 
-The second test runs the homepage smoke test at an iPhone 17 viewport. It fails because the mobile layout uses different controls. It shows that the test can run on a mobile device.
+The second test runs the homepage smoke test on a iPhone 17 viewport. It fails because the mobile layout uses different controls. It shows that the test can run on a mobile device only.
 
 ### complete-test-desktop.spec.ts
 
-All of the desktop tasks in one end-to-end test.
+All of the desktop tasks in one e2e test.
 
 ## Axe findings on the homepage
 
@@ -66,17 +66,17 @@ These are all in the featured carousel:
 
 ## Debugging flaky-test.spec.ts
 
-The commented test at the top of the file has these problems:
+The commented out test at the top of the file has these problems:
 
 1. Lines 8 and 9 count `.carousel-item` after the click, so the count runs on the show page instead of the homepage. It should run before the click.
 2. The Top 10 order changes. The test hardcodes which item to click and which show title to expect, so it fails when that show is no longer in that position.
 3. Replace `waitForTimeout` with an assertion that the Top 10 list is visible.
-4. Accept the cookie banner so it does not cover the page.
+4. Accept the cookie banner so it does not cover the page elements.
 5. Scrolling the Top 10 list into view makes debugging easier.
 
 ### Investigating intermittent CI failures
 
-1. Check the error, screenshots, video, and trace for the failing test.
-2. Compare it with other failures. Is it always the same step? Run it again and see if it still fails about one time in five.
-3. Compare the browser and speed. CI runs headless Chromium. A headed run on this machine can be slower, so a race can pass locally and fail in the pipeline.
-4. Check region before time zone. GitHub-hosted runners are often outside the UK, and U can look different from abroad.
+1. Check the error, screenshots, videos, and traces for the failing test.
+2. Compare it with other failures. Is it always the same step?
+3. Compare the browser and speed. Does CI runs headless Chromium? Is this different to the local runs?
+4. Check region and time zone. 
